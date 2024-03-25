@@ -33,7 +33,6 @@
       <div class="nav-separator"></div>
       <div class="nav-item sub-nav-container" ref="subNavContainer">
         <div class="nav-item-content" @click.stop="toggleSubNav">
-          <font-awesome-icon icon="['fas', 'bars']" />
           <span class="nav-text">比赛介绍</span>
         </div>
         <div class="sub-nav" v-show="showSubNav" ref="subNav">
@@ -48,9 +47,9 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { ref, onMounted, onUnmounted } from 'vue'
 export default {
+
   setup() {
     const messages = ref([])
     const showSubNav = ref(false)
@@ -125,7 +124,6 @@ export default {
     onUnmounted(() => {
       window.removeEventListener('resize', positionSubNav)
     })
-
     return {
       messages,
       showSubNav,
