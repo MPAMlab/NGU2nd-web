@@ -12,26 +12,30 @@
           </div>
           <div class="card-message" v-else>
             <div class="card-header">{{ message.title }}</div>
-            <div class="card-content">
-              <div class="card-text">{{ message.text }}</div>
-              <div class="card-image">
-                <img :src="message.imageUrl" :alt="message.title">
-              </div>
-            </div>
-          </div>
+            <a :href="message.linkUrl" target="_blank">
+              <div class="card-content">
+                <div class="card-text">{{ message.text }}</div>
+                <div class="card-image">
+                  <img :src="message.imageUrl" :alt="message.title">
+      </div>
+    </div>
+  </a>
+</div>
         </div>
       </div>
     </div>
+    <!-- 其他部分保持不变 -->
     <div class="nav-bar">
       <div class="nav-item" @click="sendPreviewMessage('https://example.com/1')">
         <span class="nav-text">首页</span>
       </div>
       <div class="nav-separator"></div>
-      <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码')">
+      <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码', '把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】', 'https://qr-start.srt.pub/not_project_raputa.png', 'https://qr-start.srt.pub/')">
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
       <div class="nav-item sub-nav-container" ref="subNavContainer">
+        <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
         <div class="nav-item-content" @click.stop="toggleSubNav">
           <span class="nav-text">比赛介绍</span>
         </div>
@@ -43,13 +47,22 @@
       </div>
     </div>
 
+
   </div>
 </template>
 
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
-export default {
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+library.add(faBars)
+
+export default {
+  components: {
+    FontAwesomeIcon
+  },
   setup() {
     const messages = ref([])
     const showSubNav = ref(false)
@@ -65,21 +78,21 @@ export default {
         isCard: false
       })
     }
-
-    const sendCardMessage = (title, text, imageUrl) => {
+    const sendCardMessage = (title, text, imageUrl, linkUrl) => {
       messages.value.push({
         id: Date.now(),
         title,
         text,
         imageUrl,
+        linkUrl,
         isCard: true
       })
     }
 
     const toggleSubNav = () => {
-      showSubNav.value = !showSubNav.value
-      positionSubNav()
-    }
+  showSubNav.value = !showSubNav.value;
+  positionSubNav();
+}
 
     const sendSubNavMessage = (content) => {
       messages.value.push({
@@ -94,27 +107,16 @@ export default {
       showSubNav.value = false
     }
 
+
     const positionSubNav = () => {
-  if (subNav.value && subNavContainer.value) {
-    const containerRect = subNavContainer.value.getBoundingClientRect();
-    const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // 确保子导航不会跑到视口之外
-    let leftPosition = containerRect.left + scrollX;
-    let topPosition = containerRect.bottom + scrollY;
+    if (subNav.value && subNavContainer.value) {
 
-    // 你可以添加额外的逻辑来限制subNav的位置
-    // 例如，根据视口的宽度来调整位置，防止它溢出屏幕
-    const subNavWidth = subNav.value.offsetWidth;
-    const viewportWidth = window.innerWidth;
-    if (leftPosition + subNavWidth > viewportWidth) {
-      leftPosition = viewportWidth - subNavWidth;
+      let leftPosition = containerRect.left + scrollX;
+      let topPosition = containerRect.top + scrollY;
+
+      subNav.value.style.left = `${leftPosition}px`;
+      subNav.value.style.top = `${topPosition}px`;
     }
-
-    subNav.value.style.left = `${leftPosition}px`;
-    subNav.value.style.top = `${topPosition}px`;
-  }
 }
 
     onMounted(() => {
@@ -146,25 +148,24 @@ export default {
   height: 100vh;
   overflow: hidden;
 }
-.site-name{
+.site-name {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   text-align: center;
-  display: flex;
-  justify-content: center;
+  flex: 1;
 }
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; 
   align-items: center;
-  height: 70px;
+  height: 60px;
   background-color: #f0f0f0;
   padding: 0 20px;
-  position: fixed; /* 固定头部 */
-  top: 0; /* 头部置顶 */
+  position: fixed;
+  top: 0;
   left: 0;
-  right: 0; /* 头部宽度延伸到视口宽度 */
-  z-index: 1000; /* 确保头部在最上层 */
+  right: 0;
+  z-index: 1000;
 }
 .message-container {
   display: flex;
@@ -238,27 +239,34 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 100px;
+  height: 60px;
   background-color: #f0f0f0;
-  position: fixed; /* 固定导航栏 */
-  bottom: 0; /* 导航栏置底 */
+  position: fixed;
+  bottom: 0;
   left: 0;
-  right: 0; /* 导航栏宽度延伸到视口宽度 */
-  z-index: 1000; /* 确保导航栏在最上层 */
+  right: 0;
+  z-index: 1000;
 }
 
 .nav-item {
   cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-  user-select: none; /* 禁止选中文本 */
+  display: flex; /* 新增 */
+  align-items: center; /* 新增 */
+  justify-content: center;
+  flex: 1;
+  height: 100%; /* 新增 */
+  user-select: none;
 }
 
 .nav-icon {
   margin-right: 5px;
+  font-size: 16px; /* 调整图标大小 */
 }
-
+.nav-text {
+  display: inline-block;
+  padding-left: 5px; /* 新增 */
+}
 .nav-separator {
   width: 1px;
   height: 20px;
@@ -284,6 +292,7 @@ export default {
   padding: 10px;
   z-index: 1;
   min-width: 150px;
+  margin-top: -10px; /* 添加这一行 */
 }
 
 .sub-nav-item {
