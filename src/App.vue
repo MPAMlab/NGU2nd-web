@@ -153,8 +153,6 @@ export default {
       dropdownRef1,
       dropdownRef3,
       textMessages,
-      sendPreviewMessage,
-      sendCardMessage,
       sendTextMessage,
       sendTextMessagesFromJSON
     }
