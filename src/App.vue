@@ -34,19 +34,11 @@
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
-      <div class="nav-item sub-nav-container" ref="subNavContainer">
+      <div class="nav-item" @click="sendPreviewMessage('https://example.com/1')">
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-        <div class="nav-item-content" @click.stop="toggleSubNav">
-          <span class="nav-text">比赛介绍</span>
-        </div>
-        <div class="sub-nav" v-show="showSubNav" ref="subNav">
-          <div class="sub-nav-item" @click="sendSubNavMessage('子导航消息1')">子导航1</div>
-          <div class="sub-nav-item" @click="sendSubNavMessage('子导航消息2')">子导航2</div>
-          <div class="sub-nav-item" @click="sendSubNavMessage('子导航消息3')">子导航3</div>
-        </div>
+        <span class="nav-text">首页</span>
       </div>
-    </div>
-
+        </div>
 
   </div>
 </template>
@@ -65,9 +57,6 @@ export default {
   },
   setup() {
     const messages = ref([])
-    const showSubNav = ref(false)
-    const subNavContainer = ref(null)
-    const subNav = ref(null)
 
 
 
@@ -89,53 +78,11 @@ export default {
       })
     }
 
-    const toggleSubNav = () => {
-  showSubNav.value = !showSubNav.value;
-  positionSubNav();
-}
-
-    const sendSubNavMessage = (content) => {
-      messages.value.push({
-        id: Date.now(),
-        content,
-        isCard: false
-      })
-      showSubNav.value = false
-    }
-
-    const closeSubNav = () => {
-      showSubNav.value = false
-    }
-
-
-    const positionSubNav = () => {
-    if (subNav.value && subNavContainer.value) {
-
-      let leftPosition = containerRect.left + scrollX;
-      let topPosition = containerRect.top + scrollY;
-
-      subNav.value.style.left = `${leftPosition}px`;
-      subNav.value.style.top = `${topPosition}px`;
-    }
-}
-
-    onMounted(() => {
-      window.addEventListener('resize', positionSubNav)
-    })
-
-    onUnmounted(() => {
-      window.removeEventListener('resize', positionSubNav)
-    })
     return {
       messages,
-      showSubNav,
-      subNavContainer,
-      subNav,
+      
       sendPreviewMessage,
       sendCardMessage,
-      toggleSubNav,
-      sendSubNavMessage,
-      closeSubNav
     }
   }
 }
@@ -239,7 +186,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 60px;
+  height: 50px;
   background-color: #f0f0f0;
   position: fixed;
   bottom: 0;
@@ -273,36 +220,12 @@ export default {
   background-color: #ccc;
 }
 
-.sub-nav-container {
-  position: relative;
-}
 
 .nav-item-content {
   cursor: pointer;
   display: flex;
   align-items: center;
   user-select: none; /* 禁止选中文本 */
-}
-
-.sub-nav {
-  position: absolute;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  z-index: 1;
-  min-width: 150px;
-  margin-top: -10px; /* 添加这一行 */
-}
-
-.sub-nav-item {
-  cursor: pointer;
-  padding: 5px 10px;
-  white-space: nowrap;
-}
-
-.sub-nav-item:hover {
-  background-color: #f0f0f0;
 }
 
 
