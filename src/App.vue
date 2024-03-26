@@ -12,35 +12,40 @@
           </div>
           <div class="card-message" v-else>
             <div class="card-header">{{ message.title }}</div>
-            <a :href="message.linkUrl" target="_blank">
+            <a :href="message.linkUrl" target="_blank" class="card-link">
               <div class="card-content">
                 <div class="card-text">{{ message.text }}</div>
-                <div class="card-image">
+                <div class="card-image" v-if="message.imageUrl">
                   <img :src="message.imageUrl" :alt="message.title">
-      </div>
-    </div>
-  </a>
-</div>
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
     <!-- 其他部分保持不变 -->
     <div class="nav-bar">
-      <div class="nav-item" @click="sendPreviewMessage('https://example.com/1')">
-        <span class="nav-text">首页</span>
+      <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
+      <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
+      <span class="nav-text">比赛介绍</span>
+      <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
+        <div class="dropdown-item" @click="sendCardMessage('test', 'test1','','https://mpam-lab.xyz')">赛制介绍</div>
+        <div class="dropdown-item">技能牌介绍</div>
       </div>
+    </div>
       <div class="nav-separator"></div>
       <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码', '把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】', 'https://qr-start.srt.pub/not_project_raputa.png', 'https://qr-start.srt.pub/')">
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
-      <div class="nav-item" @click.stop="toggleDropdown">
+      <div class="nav-item" @click.stop="toggleDropdown(3, 1)">
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-        <span class="nav-text">首页</span>
-        <div v-show="showDropdown" class="dropdown-menu" ref="dropdownRef">
-          <div class="dropdown-item">Option 1</div>
-          <div class="dropdown-item">Option 2</div>
-          <div class="dropdown-item">Option 3</div>
+        <span class="nav-text">其他</span>
+        <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
+          <div class="dropdown-item">STAFF表</div>
+          <div class="dropdown-item">直播间/回放视频</div>
+          <div class="dropdown-item">？？？</div>
         </div>
       </div>
     </div>
@@ -79,15 +84,22 @@ export default {
         isCard: true
       })
     }
-    const showDropdown = ref(false)
-    const dropdownRef = ref(null) // 新增
-    const toggleDropdown = () => {
-      showDropdown.value = !showDropdown.value
+    const showDropdown = ref({
+      1: false,
+      3: false
+    })
+    const dropdownRef1 = ref(null)
+    const dropdownRef3 = ref(null)
+    const toggleDropdown = (index, otherIndex) => {
+      showDropdown.value[index] = !showDropdown.value[index]
+      if (showDropdown.value[index]) {
+        showDropdown.value[otherIndex] = false
+      }
     }
-    const closeDropdown = () => {
-      showDropdown.value = false
+    const closeDropdown = (index) => {
+      showDropdown.value[index] = false
     }
-        // 新增函数,用于判断点击位置是否在 dropdown 之外
+
     const handleOutsideClick = (event) => {
       if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
         showDropdown.value = false
@@ -110,7 +122,8 @@ export default {
       sendPreviewMessage,
       sendCardMessage,
       closeDropdown,
-      dropdownRef
+      dropdownRef1,
+      dropdownRef3
     }
   }
 }
@@ -180,33 +193,40 @@ export default {
 }
 
 .card-message {
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 300px;
-  max-height: 400px;
-  overflow: hidden;
-}
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 300px;
+  }
 
-.card-header {
-  background-color: #f0f0f0;
-  padding: 10px 15px;
-  font-weight: bold;
-}
+  .card-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-.card-content {
-  padding: 15px;
-}
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+  }
 
-.card-text {
-  margin-bottom: 10px;
-}
+  .card-content {
+    display: flex;
+    align-items: center;
+  }
 
-.card-image img {
-  max-width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-}
+  .card-text {
+    flex: 1;
+    margin-right: 10px;
+    color: #666;
+  }
+
+  .card-image img {
+    max-width: 50px;
+    max-height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
 
 .nav-bar {
   display: flex;
