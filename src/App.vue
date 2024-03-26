@@ -188,7 +188,7 @@ export default {
   justify-content: center; 
   align-items: center;
   height: 60px;
-  background-color: #f0f0f0;
+  background-color: #baaffe;
   padding: 0 20px;
   position: fixed;
   top: 0;
@@ -207,9 +207,10 @@ export default {
 }
 .message-area {
   flex-grow: 1;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
   margin-top: 70px;
+  margin-bottom: 50px;
 }
 .avatar {
   width: 40px;
