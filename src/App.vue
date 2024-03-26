@@ -1,7 +1,7 @@
 <template>
   <div class="chat-app" @click.self="closeDropdown">
     <div class="header">
-      <div class="site-name">Never Give Up The 2nd</div>
+      <div class="site-name">Never Give Up 2nd</div>
     </div>
     <div class="message-area">
       <div v-for="message in messages" :key="message.id" class="message-container">
@@ -101,8 +101,12 @@ export default {
     }
 
     const handleOutsideClick = (event) => {
-      if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-        showDropdown.value = false
+      if (
+        (dropdownRef1.value && !dropdownRef1.value.contains(event.target)) &&
+        (dropdownRef3.value && !dropdownRef3.value.contains(event.target))
+      ) {
+        showDropdown.value[1] = false
+        showDropdown.value[3] = false
       }
     }
 
@@ -130,6 +134,12 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'KORUNISH';
+    src: url('./assets/fonts/KORUNISH.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
 .chat-app {
   display: flex;
   flex-direction: column;
@@ -137,7 +147,7 @@ export default {
   overflow: hidden;
 }
 .site-name {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'KORUNISH', sans-serif;
   font-weight: bold;
   text-align: center;
   flex: 1;
