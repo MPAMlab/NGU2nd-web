@@ -3,7 +3,7 @@
     <div class="header">
       <div class="site-name">Never Give Up 2nd</div>
     </div>
-    <div class="message-area">
+    <div class="message-area" ref="messageAreaRef">
   <div v-for="message in messages" :key="message.id" class="message-container">
     <div class="message-item">
       <div class="avatar"></div>
@@ -79,6 +79,7 @@ export default {
         content: `网址预览: ${url}`,
         isCard: false
       })
+      scrollToBottom()
     }
     const sendCardMessage = (title, text, imageUrl, linkUrl) => {
       messages.value.push({
@@ -89,6 +90,7 @@ export default {
         linkUrl,
         isCard: true
       })
+      scrollToBottom()
     }
     const showDropdown = ref({
       1: false,
@@ -122,6 +124,7 @@ export default {
         isCard: false,
         isText: true
       })
+      scrollToBottom()
     }
 
     const loadTextMessages = () => {
@@ -132,7 +135,17 @@ export default {
     const sendTextMessagesFromJSON = (index) => {
       sendTextMessage(textMessages.value[index])
     }
+    const messageAreaRef = ref(null)
 
+const scrollToBottom = () => {
+  const messageArea = messageAreaRef.value
+  if (messageArea) {
+    const lastMessage = messageArea.lastElementChild
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+}
     loadTextMessages()
 
     // 在组件挂载时,添加点击事件监听器
@@ -147,6 +160,7 @@ export default {
     return {
       messages,
       showDropdown,
+      messageAreaRef,
       toggleDropdown,
       sendPreviewMessage,
       sendCardMessage,
