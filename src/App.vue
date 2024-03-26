@@ -4,26 +4,29 @@
       <div class="site-name">Never Give Up 2nd</div>
     </div>
     <div class="message-area">
-      <div v-for="message in messages" :key="message.id" class="message-container">
-        <div class="message-item">
-          <div class="avatar"></div>
-          <div class="message-bubble" v-if="!message.isCard">
-            <div class="message-content">{{ message.content }}</div>
+  <div v-for="message in messages" :key="message.id" class="message-container">
+    <div class="message-item">
+      <div class="avatar"></div>
+      <div class="message-bubble" v-if="message.isText">
+        <div v-html="message.content"></div>
+      </div>
+      <div class="message-bubble" v-else-if="!message.isCard">
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+      <div class="card-message" v-else>
+        <div class="card-header">{{ message.title }}</div>
+        <a :href="message.linkUrl" target="_blank" class="card-link">
+          <div class="card-content">
+            <div class="card-text">{{ message.text }}</div>
+            <div class="card-image" v-if="message.imageUrl">
+              <img :src="message.imageUrl" :alt="message.title">
+            </div>
           </div>
-          <div class="card-message" v-else>
-            <div class="card-header">{{ message.title }}</div>
-            <a :href="message.linkUrl" target="_blank" class="card-link">
-              <div class="card-content">
-                <div class="card-text">{{ message.text }}</div>
-                <div class="card-image" v-if="message.imageUrl">
-                  <img :src="message.imageUrl" :alt="message.title">
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
+        </a>
       </div>
     </div>
+  </div>
+</div>
     <!-- 其他部分保持不变 -->
     <div class="nav-bar">
       <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
@@ -43,7 +46,7 @@
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">其他</span>
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
-          <div class="dropdown-item">STAFF表</div>
+          <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
           <div class="dropdown-item">直播间/回放视频</div>
           <div class="dropdown-item">？？？</div>
         </div>
@@ -58,6 +61,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import textMessagesData from './assets/text.json'
 
 library.add(faBars)
 
@@ -67,6 +71,7 @@ export default {
   },
   setup() {
     const messages = ref([])
+    const textMessages = ref([])
     const sendPreviewMessage = (url) => {
       messages.value.push({
         id: Date.now(),
@@ -109,6 +114,25 @@ export default {
         showDropdown.value[3] = false
       }
     }
+    const sendTextMessage = (text) => {
+      messages.value.push({
+        id: Date.now(),
+        content: text,
+        isCard: false,
+        isText: true
+      })
+    }
+
+    const loadTextMessages = () => {
+      textMessages.value = textMessagesData
+    }
+
+
+    const sendTextMessagesFromJSON = (index) => {
+      sendTextMessage(textMessages.value[index])
+    }
+
+    loadTextMessages()
 
     // 在组件挂载时,添加点击事件监听器
     onMounted(() => {
@@ -127,7 +151,12 @@ export default {
       sendCardMessage,
       closeDropdown,
       dropdownRef1,
-      dropdownRef3
+      dropdownRef3,
+      textMessages,
+      sendPreviewMessage,
+      sendCardMessage,
+      sendTextMessage,
+      sendTextMessagesFromJSON
     }
   }
 }
@@ -140,11 +169,14 @@ export default {
     font-weight: normal;
     font-style: normal;
   }
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap');
+
 .chat-app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  font-family: 'Noto Sans SC', sans-serif;
 }
 .site-name {
   font-family: 'KORUNISH', sans-serif;
@@ -195,6 +227,7 @@ export default {
   padding: 10px 15px;
   border-radius: 5px;
   background-color: #f0f0f0;
+  white-space: pre-line;
 }
 
 .message-content {
@@ -288,7 +321,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 10px 0;
-  min-width: 150px;
+  min-width: 100px;
 }
 
 .dropdown-item {
