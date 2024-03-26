@@ -48,6 +48,7 @@
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
           <div class="dropdown-item">直播间/回放视频</div>
+          <div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', './assets/download.png', 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>
           <div class="dropdown-item">？？？</div>
         </div>
       </div>
