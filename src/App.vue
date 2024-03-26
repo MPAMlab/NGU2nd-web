@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-app">
+  <div class="chat-app" @click.self="closeDropdown">
     <div class="header">
       <div class="site-name">Never Give Up The 2nd</div>
     </div>
@@ -34,11 +34,16 @@
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
-      <div class="nav-item" @click="sendPreviewMessage('https://example.com/1')">
+      <div class="nav-item" @click.stop="toggleDropdown">
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">首页</span>
-      </div>
+        <div v-show="showDropdown" class="dropdown-menu" ref="dropdownRef">
+          <div class="dropdown-item">Option 1</div>
+          <div class="dropdown-item">Option 2</div>
+          <div class="dropdown-item">Option 3</div>
         </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -57,9 +62,6 @@ export default {
   },
   setup() {
     const messages = ref([])
-
-
-
     const sendPreviewMessage = (url) => {
       messages.value.push({
         id: Date.now(),
@@ -77,12 +79,38 @@ export default {
         isCard: true
       })
     }
+    const showDropdown = ref(false)
+    const dropdownRef = ref(null) // 新增
+    const toggleDropdown = () => {
+      showDropdown.value = !showDropdown.value
+    }
+    const closeDropdown = () => {
+      showDropdown.value = false
+    }
+        // 新增函数,用于判断点击位置是否在 dropdown 之外
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+        showDropdown.value = false
+      }
+    }
 
+    // 在组件挂载时,添加点击事件监听器
+    onMounted(() => {
+      document.addEventListener('click', handleOutsideClick)
+    })
+
+    // 在组件卸载时,移除点击事件监听器
+    onUnmounted(() => {
+      document.removeEventListener('click', handleOutsideClick)
+    })
     return {
       messages,
-      
+      showDropdown,
+      toggleDropdown,
       sendPreviewMessage,
       sendCardMessage,
+      closeDropdown,
+      dropdownRef
     }
   }
 }
@@ -129,8 +157,6 @@ export default {
   overflow-y: auto;
   margin-top: 70px;
 }
-
-
 .avatar {
   width: 40px;
   height: 40px;
@@ -194,7 +220,6 @@ export default {
   right: 0;
   z-index: 1000;
 }
-
 .nav-item {
   cursor: pointer;
   position: relative;
@@ -219,14 +244,29 @@ export default {
   height: 20px;
   background-color: #ccc;
 }
-
-
 .nav-item-content {
   cursor: pointer;
   display: flex;
   align-items: center;
   user-select: none; /* 禁止选中文本 */
 }
+.dropdown-menu {
+  position: absolute;
+  bottom: 55px;
+  left: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 10px 0;
+  min-width: 150px;
+}
 
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+}
 
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
 </style>
