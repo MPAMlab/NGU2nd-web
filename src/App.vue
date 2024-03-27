@@ -33,8 +33,8 @@
       <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
       <span class="nav-text">比赛介绍</span>
       <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
-        <div class="dropdown-item" @click="sendCardMessage('test', 'test1','','https://mpam-lab.xyz')">赛制介绍</div>
-        <div class="dropdown-item">技能牌介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('赛制介绍', 'NGU2nd 比赛赛制介绍','','https://mpam-lab.xyz')">赛制介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('技能牌介绍', 'NGU2nd 比赛用技能牌介绍', '', 'https://mpam-lab.xyz')">技能牌介绍</div>
       </div>
     </div>
       <div class="nav-separator"></div>
@@ -48,7 +48,7 @@
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
           <div class="dropdown-item">直播间/回放视频</div>
-          <div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', './assets/download.png', 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>
+          <div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>
           <div class="dropdown-item">？？？</div>
         </div>
       </div>
