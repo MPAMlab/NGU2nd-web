@@ -13,20 +13,21 @@
   import marked from 'marked'
   
   export default {
-    name: 'Post',
-    props: {
-      content: {
-        type: String,
-        required: true
-      }
-    },
-    computed: {
-      renderedContent() {
-        return marked(this.content, { breaks: true })
-      }
+  name: 'Post',
+  props: {
+    filename: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    renderedContent() {
+      const content = markdownContext(`./${this.filename}`).default;
+      return marked(content, { breaks: true });
     }
   }
-  </script>
+}
+</script>
   
   <style scoped>
   .post-container {

@@ -3,6 +3,7 @@
     <div class="header">
       <div class="site-name">Never Give Up 2nd</div>
     </div>
+    
     <div class="message-area" ref="messageAreaRef">
   <div v-for="message in messages" :key="message.id" class="message-container">
     <div class="message-item">
@@ -30,37 +31,28 @@
     <!-- 其他部分保持不变 -->
     <div class="nav-bar">
       <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
-        <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-        <span class="nav-text">比赛介绍</span>
-        <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
-          <div
-            class="dropdown-item"
-            v-for="card in cardMessages.filter(
-              (card) => card.category === '比赛介绍'
-            )"
-            :key="card.title"
-            @click="sendCardMessage(card)"
-          >
-            {{ card.title }}
-          </div>
-        </div>
+      <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
+      <span class="nav-text">比赛介绍</span>
+      <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
+        <div class="dropdown-item" @click="sendCardMessage('赛制介绍', 'NGU2nd 比赛赛制介绍','','./tournament-introduction.html')">赛制介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('技能牌介绍', 'NGU2nd 比赛用技能牌介绍', '', './card-introduction.html')">技能牌介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('NGU 1st （比赛日期 2023/5/15）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店） 优胜者：Stella 点击查看照片', '', './ngu1st.webp')">NGU 1st</div>
       </div>
+    </div>
       <div class="nav-separator"></div>
-      <div
-        class="nav-item"
-        @click="sendCardMessage(cardMessages.find((card) => card.title === '玩家二维码'))"
-      >
+      <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码', '把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】', 'https://qr-start.srt.pub/not_project_raputa.png', 'https://mpam-lab.xyz/qr-code')">
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
       <div class="nav-item" @click.stop="toggleDropdown(3, 1)">
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-        <span class="nav-text">其他</span>
+        <span class="nav-text">更多</span>
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
-          <div class="dropdown-item">直播间/回放视频</div>
-          <div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>
-          <div class="dropdown-item">？？？</div>
+          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播', '哔哩哔哩直播 - UP主：nonefffds - 房间号：10910411', '', 'https://live.bilibili.com/10910411')">比赛直播间</div>
+          <!--<div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>-->
+          <div class="dropdown-item">？？？（比赛后解锁）</div>
+          <div class="dropdown-item" @click="sendTextMessagesFromJSON(1)">关于本网站/隐私权政策</div>
         </div>
       </div>
     </div>
@@ -73,13 +65,13 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import textMessagesData from './assets/text.json'
-import cardMessageData from './assets/card.json'
-const cardMessages = ref(cardMessageData);
+//import Post from './post.vue'
+//const cardMessages = ref(cardMessageData);
 library.add(faBars)
-
 export default {
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    //Post
   },
   setup() {
     const messages = ref([])
@@ -92,34 +84,17 @@ export default {
       })
       scrollToBottom()
     }
-    const sendCardMessage = (...args) => {
-      let message;
-      if (args.length === 1 && typeof args[0] === 'object') {
-        // 如果只传入一个对象参数
-        const card = args[0];
-        message = {
-          id: Date.now(),
-          title: card.title,
-          text: card.text,
-          imageUrl: card.imageUrl,
-          linkUrl: card.linkUrl,
-          isCard: true,
-        };
-      } else {
-        // 如果传入四个参数
-        const [title, text, imageUrl, linkUrl] = args;
-        message = {
-          id: Date.now(),
-          title,
-          text,
-          imageUrl,
-          linkUrl,
-          isCard: true,
-        };
-      }
-      messages.value.push(message);
-      scrollToBottom();
-    };
+    const sendCardMessage = (title, text, imageUrl, linkUrl) => {
+      messages.value.push({
+        id: Date.now(),
+        title,
+        text,
+        imageUrl,
+        linkUrl,
+        isCard: true
+      })
+      scrollToBottom()
+    }
     const showDropdown = ref({
       1: false,
       3: false
@@ -198,7 +173,7 @@ const scrollToBottom = () => {
       textMessages,
       sendTextMessage,
       sendTextMessagesFromJSON,
-      cardMessages,
+      //cardMessages,
     }
   }
 }
