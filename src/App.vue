@@ -36,7 +36,8 @@
       <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
         <div class="dropdown-item" @click="sendCardMessage('赛制介绍', 'NGU2nd 比赛赛制介绍','','./tournament-introduction.html')">赛制介绍</div>
         <div class="dropdown-item" @click="sendCardMessage('技能牌介绍', 'NGU2nd 比赛用技能牌介绍', '', './card-introduction.html')">技能牌介绍</div>
-        <div class="dropdown-item" @click="sendCardMessage('NGU 1st （比赛日期 2023/5/15）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店） 优胜者：Stella 点击查看照片', '', './ngu1st.webp')">NGU 1st</div>
+        <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
+        <div class="dropdown-item" @click="sendNGU1stCard">NGU 1st</div>
       </div>
     </div>
       <div class="nav-separator"></div>
@@ -48,10 +49,10 @@
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">更多</span>
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
-          <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
           <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播', '哔哩哔哩直播 - UP主：nonefffds - 房间号：10910411', '', 'https://live.bilibili.com/10910411')">比赛直播间</div>
+          <div class="dropdown-item">下载配布资源（赛后解锁）</div>
           <!--<div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>-->
-          <div class="dropdown-item">？？？（比赛后解锁）</div>
+          <div class="dropdown-item">？？？（赛后解锁）</div>
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(1)">关于本网站/隐私权政策</div>
         </div>
       </div>
@@ -73,7 +74,15 @@ export default {
     FontAwesomeIcon,
     //Post
   },
+  methods: {
+    sendNGU1stCard() {
+      this.sendCardMessage('NGU 1st （比赛日期 2023/5/15）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看规则公告牌', '', './ngu1st-rule.webp');
+      this.sendCardMessage('比赛合照', 'NGU 1st 优胜者：Stella， 点击查看参与者合照', '', './ngu1st.webp');
+      this.sendCardMessage('直播回放', '哔哩哔哩 - 第一届NGU——"Never Give Up杯"游戏大魔方maimai娱乐赛 - UP主：Rimrose', '', 'https://www.bilibili.com/video/BV1NV4y1k7Ek/');
+    }
+  },
   setup() {
+
     const messages = ref([])
     const textMessages = ref([])
     const sendPreviewMessage = (url) => {
@@ -129,7 +138,6 @@ export default {
       })
       scrollToBottom()
     }
-
     const loadTextMessages = () => {
       textMessages.value = textMessagesData
     }
@@ -140,17 +148,18 @@ export default {
     }
     const messageAreaRef = ref(null)
 
-const scrollToBottom = () => {
-  const messageArea = messageAreaRef.value
-  if (messageArea) {
-    const lastMessage = messageArea.lastElementChild
-    if (lastMessage) {
-      lastMessage.scrollIntoView({ behavior: 'smooth' })
+    const scrollToBottom = () => {
+      const messageArea = messageAreaRef.value
+      if (messageArea) {
+        const lastMessage = messageArea.lastElementChild
+        if (lastMessage) {
+          lastMessage.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
     }
-  }
-}
     loadTextMessages()
-
+    sendCardMessage('你好，欢迎来到 NGU 2nd 比赛官网', '本网站下方有本次比赛的相关信息，请进行查看及参考', '', '')
+    sendCardMessage('如需更多比赛相关帮助', '请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz', '', 'https://space.bilibili.com/3546613924497542/')
     // 在组件挂载时,添加点击事件监听器
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
