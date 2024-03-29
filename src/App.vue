@@ -30,15 +30,26 @@
     <!-- 其他部分保持不变 -->
     <div class="nav-bar">
       <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
-      <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-      <span class="nav-text">比赛介绍</span>
-      <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
-        <div class="dropdown-item" @click="sendCardMessage('赛制介绍', 'NGU2nd 比赛赛制介绍','','https://mpam-lab.xyz')">赛制介绍</div>
-        <div class="dropdown-item" @click="sendCardMessage('技能牌介绍', 'NGU2nd 比赛用技能牌介绍', '', 'https://mpam-lab.xyz')">技能牌介绍</div>
+        <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
+        <span class="nav-text">比赛介绍</span>
+        <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
+          <div
+            class="dropdown-item"
+            v-for="card in cardMessages.filter(
+              (card) => card.category === '比赛介绍'
+            )"
+            :key="card.title"
+            @click="sendCardMessage(card)"
+          >
+            {{ card.title }}
+          </div>
+        </div>
       </div>
-    </div>
       <div class="nav-separator"></div>
-      <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码', '把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】', 'https://qr-start.srt.pub/not_project_raputa.png', 'https://qr-start.srt.pub/')">
+      <div
+        class="nav-item"
+        @click="sendCardMessage(cardMessages.find((card) => card.title === '玩家二维码'))"
+      >
         <span class="nav-text">玩家二维码</span>
       </div>
       <div class="nav-separator"></div>
@@ -53,7 +64,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -63,7 +73,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import textMessagesData from './assets/text.json'
-
+import cardMessageData from './assets/card.json'
+const cardMessages = ref(cardMessageData);
 library.add(faBars)
 
 export default {
@@ -81,17 +92,34 @@ export default {
       })
       scrollToBottom()
     }
-    const sendCardMessage = (title, text, imageUrl, linkUrl) => {
-      messages.value.push({
-        id: Date.now(),
-        title,
-        text,
-        imageUrl,
-        linkUrl,
-        isCard: true
-      })
-      scrollToBottom()
-    }
+    const sendCardMessage = (...args) => {
+      let message;
+      if (args.length === 1 && typeof args[0] === 'object') {
+        // 如果只传入一个对象参数
+        const card = args[0];
+        message = {
+          id: Date.now(),
+          title: card.title,
+          text: card.text,
+          imageUrl: card.imageUrl,
+          linkUrl: card.linkUrl,
+          isCard: true,
+        };
+      } else {
+        // 如果传入四个参数
+        const [title, text, imageUrl, linkUrl] = args;
+        message = {
+          id: Date.now(),
+          title,
+          text,
+          imageUrl,
+          linkUrl,
+          isCard: true,
+        };
+      }
+      messages.value.push(message);
+      scrollToBottom();
+    };
     const showDropdown = ref({
       1: false,
       3: false
@@ -169,7 +197,8 @@ const scrollToBottom = () => {
       dropdownRef3,
       textMessages,
       sendTextMessage,
-      sendTextMessagesFromJSON
+      sendTextMessagesFromJSON,
+      cardMessages,
     }
   }
 }
