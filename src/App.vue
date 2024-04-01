@@ -28,7 +28,6 @@
     </div>
   </div>
 </div>
-    <!-- 其他部分保持不变 -->
     <div class="nav-bar">
       <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
       <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
@@ -36,6 +35,7 @@
       <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
         <div class="dropdown-item" @click="sendCardMessage('比赛介绍', 'NGU2nd 比赛赛制介绍','','./比赛介绍.html')">比赛介绍</div>
         <div class="dropdown-item" @click="sendCardMessage('功能牌列表', 'NGU2nd 比赛用技能牌介绍', '', './功能牌列表.html')">功能牌列表</div>
+        <div class="dropdown-item" @click="sendTextMessagesFromJSON(2)">比赛时间、地点</div>
         <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
         <div class="dropdown-item" @click="sendNGU1stCard">NGU 1st</div>
       </div>
@@ -302,7 +302,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 50px;
+  height: 60px;
   background-color: #f0f0f0;
   position: fixed;
   bottom: 0;
@@ -313,21 +313,21 @@ export default {
 .nav-item {
   cursor: pointer;
   position: relative;
-  display: flex; /* 新增 */
-  align-items: center; /* 新增 */
+  display: flex;
+  align-items: center;
   justify-content: center;
   flex: 1;
-  height: 100%; /* 新增 */
+  height: 100%;
   user-select: none;
 }
 
 .nav-icon {
   margin-right: 5px;
-  font-size: 16px; /* 调整图标大小 */
+  font-size: 16px;
 }
 .nav-text {
   display: inline-block;
-  padding-left: 5px; /* 新增 */
+  padding-left: 5px;
 }
 .nav-separator {
   width: 1px;
@@ -338,7 +338,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  user-select: none; /* 禁止选中文本 */
+  user-select: none;
 }
 .dropdown-menu {
   position: absolute;
