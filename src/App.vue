@@ -34,8 +34,8 @@
       <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
       <span class="nav-text">比赛介绍</span>
       <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
-        <div class="dropdown-item" @click="sendCardMessage('赛制介绍', 'NGU2nd 比赛赛制介绍','','./tournament-introduction.html')">赛制介绍</div>
-        <div class="dropdown-item" @click="sendCardMessage('技能牌介绍', 'NGU2nd 比赛用技能牌介绍', '', './card-introduction.html')">技能牌介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('比赛介绍', 'NGU2nd 比赛赛制介绍','','./比赛介绍.html')">比赛介绍</div>
+        <div class="dropdown-item" @click="sendCardMessage('功能牌列表', 'NGU2nd 比赛用技能牌介绍', '', './功能牌列表.html')">功能牌列表</div>
         <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
         <div class="dropdown-item" @click="sendNGU1stCard">NGU 1st</div>
       </div>
