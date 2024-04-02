@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     sendNGU1stCard() {
-      this.sendCardMessage('NGU 1st （比赛日期 2023/5/15）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看NGU1st海报', '', './ngu1st-poster.webp');
+      this.sendCardMessage('NGU 1st （比赛日期 2023/5/14）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看NGU1st海报', '', './ngu1st-poster.webp');
       this.sendCardMessage('比赛合照', 'NGU 1st 优胜者：Stella， 点击查看参与者合照', '', './ngu1st.webp');
       this.sendCardMessage('直播回放', '哔哩哔哩 - 第一届NGU——"Never Give Up杯"游戏大魔方maimai娱乐赛 - UP主：Rimrose', '', 'https://www.bilibili.com/video/BV1NV4y1k7Ek/');
     }
