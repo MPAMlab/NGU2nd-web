@@ -53,6 +53,7 @@
           <div class="dropdown-item">下载配布资源（赛后解锁）</div>
           <!--<div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>-->
           <div class="dropdown-item">？？？（赛后解锁）</div>
+          <div class="dropdown-item" @click="sendSupportCard">打赏</div>
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(1)">关于本网站/隐私权政策</div>
         </div>
       </div>
@@ -79,6 +80,10 @@ export default {
       this.sendCardMessage('NGU 1st （比赛日期 2023/5/14）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看NGU1st海报', '', './ngu1st-poster.webp');
       this.sendCardMessage('比赛合照', 'NGU 1st 优胜者：Stella， 点击查看参与者合照', '', './ngu1st.webp');
       this.sendCardMessage('直播回放', '哔哩哔哩 - 第一届NGU——"Never Give Up杯"游戏大魔方maimai娱乐赛 - UP主：Rimrose', '', 'https://www.bilibili.com/video/BV1NV4y1k7Ek/');
+    },
+    sendSupportCard(){
+      this.sendCardMessage('NGU 组织不易', '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）', 'https://ngu-img.mpam-lab.xyz/paycode.webp', 'https://ngu-img.mpam-lab.xyz/paycode.png');
+      this.sendTextMessage('①②\n③④')
     }
   },
   setup() {
