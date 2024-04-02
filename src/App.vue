@@ -168,14 +168,15 @@ export default {
     // 在组件挂载时,添加点击事件监听器
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
+      if (window.location.hash === '#ngu3rd') {
+        sendTextMessage('Is this the real life? Is this just fantasy? Stay tuned for NGU 3rd.')
+      }
     })
 
     // 在组件卸载时,移除点击事件监听器
     onUnmounted(() => {
       document.removeEventListener('click', handleOutsideClick)
-      if (window.location.hash === '#ngu3rd') {
-        sendTextMessage('Is this the real life? Is this just fantasy? Stay tuned for NGU 3rd.')
-      }
+
     })
     return {
       messages,
