@@ -82,7 +82,7 @@ export default {
       this.sendCardMessage('直播回放', '哔哩哔哩 - 第一届NGU——"Never Give Up杯"游戏大魔方maimai娱乐赛 - UP主：Rimrose', '', 'https://www.bilibili.com/video/BV1NV4y1k7Ek/');
     },
     sendSupportCard(){
-      this.sendCardMessage('NGU 组织不易', '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）', 'https://ngu-img.mpam-lab.xyz/paycode.webp', 'https://ngu-img.mpam-lab.xyz/paycode.png');
+      this.sendCardMessage('NGU 组织不易', '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）', 'https://ngu-img.mpam-lab.xyz/paycode.webp', 'https://ngu-img.mpam-lab.xyz/pay-qrcode.png');
       this.sendTextMessage('①②\n③④')
     }
   },
