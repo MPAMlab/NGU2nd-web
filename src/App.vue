@@ -165,6 +165,7 @@ export default {
     loadTextMessages()
     sendCardMessage('你好，欢迎来到 NGU 2nd 比赛官网', '本网站下方有本次比赛的相关信息，请进行查看及参考', '', '')
     sendCardMessage('如需更多比赛相关帮助', '请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz', '', 'https://space.bilibili.com/3546613924497542/')
+    sendCardMessage('本网站仅作为内部活动宣传所用', '本网站为静态网站，所有内容均为合法范围，且无不良引导。本网站无评论等交互功能', '', '')
     // 在组件挂载时,添加点击事件监听器
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
