@@ -170,7 +170,7 @@ export default {
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
       if (window.location.hash === '#ngu3rd') {
-        sendTextMessage('Is this the real life? Is this just fantasy? Stay tuned for NGU 3rd.')
+        sendTextMessage('Not Game Up, 3rd? See you beh1nd the STAGE. Thanks for your playing.')
       }
     })
 
