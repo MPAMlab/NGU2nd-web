@@ -49,10 +49,10 @@
         <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">更多</span>
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
-          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播', '哔哩哔哩直播 - UP主：nonefffds - 房间号：10910411', '', 'https://live.bilibili.com/10910411')">比赛直播间</div>
-          <div class="dropdown-item">下载配布资源（赛后解锁）</div>
-          <!--<div class="dropdown-item" @click="sendCardMessage('文件下载','サカサカバンバンバスピスピス.zip\n 1.5MB', require('@/assets/download.png'), 'https://fds.srt.pub/simai/sakasakabanbanbasupisupisu/%E3%82%B5%E3%82%AB%E3%82%B5%E3%82%AB%E3%83%90%E3%83%B3%E3%83%90%E3%83%B3%E3%83%90%E3%82%B9%E3%83%94%E3%82%B9%E3%83%94%E3%82%B9.zip')">文件下载测试</div>-->
-          <div class="dropdown-item">？？？（赛后解锁）</div>
+          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播回放', '哔哩哔哩 - 舞萌DX娱乐赛 NGU2nd 比赛直播回放 - UP主：灯射来红音游协会', '', 'https://live.bilibili.com/10910411')">比赛回放</div>
+          <div class="dropdown-item">决赛boss曲谱面下载</div>
+          <div class="dropdown-item" @click="sendCardMessage('决赛boss曲谱面下载','< II >\n 1.5MB', require('@/assets/download.png'), 'https://ngu-img.mpam-lab.xyz/ngu2nd-boss.zip')">决赛boss曲谱面下载</div>
+          <div class="dropdown-item" @click="sendCardMessage('决赛结果', 'NGU 2nd 优胜组：越级勉强打白潘 \n 成员：Stella，Sa&K', '','https://ngu-img.mpam-lab.xyz/ngu2nd-lastround-detail.webp')">决赛结果详情</div>
           <div class="dropdown-item" @click="sendSupportCard">打赏</div>
           <div class="dropdown-item" @click="sendTextMessagesFromJSON(1)">关于本网站/隐私权政策</div>
         </div>
@@ -170,7 +170,7 @@ export default {
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
       if (window.location.hash === '#ngu3rd') {
-        sendTextMessage('Not Game Up, 3rd? See you beh1nd the STAGE. Thanks for your playing.')
+        sendTextMessage('Dealt? Probably, I will still be at the place for you.')
       }
     })
 
