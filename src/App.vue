@@ -50,7 +50,7 @@
         <span class="nav-text">更多</span>
         <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
           <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播回放', '哔哩哔哩 - 舞萌DX娱乐赛 NGU2nd 比赛直播回放 - UP主：灯射来红音游协会', '', 'https://live.bilibili.com/10910411')">比赛回放</div>
-          <div class="dropdown-item">决赛boss曲谱面下载</div>
+          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 全体成员合照', '点击查看合照', '','https://ngu-img.mpam-lab.xyz/NGU2nd_group_photo_v1.1.webp')">全体成员合照</div>
           <div class="dropdown-item" @click="sendCardMessage('决赛boss曲谱面下载','< II >\n 1.5MB', require('@/assets/download.png'), 'https://ngu-img.mpam-lab.xyz/ngu2nd-boss.zip')">决赛boss曲谱面下载</div>
           <div class="dropdown-item" @click="sendCardMessage('决赛结果', 'NGU 2nd 优胜组：越级勉强打白潘 \n 成员：Stella，Sa&K', '','https://ngu-img.mpam-lab.xyz/ngu2nd-lastround-detail.webp')">决赛结果详情</div>
           <div class="dropdown-item" @click="sendSupportCard">打赏</div>
