@@ -3,58 +3,54 @@
     <div class="header">
       <div class="site-name">Never Give Up 2nd</div>
     </div>
-    
+
     <div class="message-area" ref="messageAreaRef">
-  <div v-for="message in messages" :key="message.id" class="message-container">
-    <div class="message-item">
-      <div class="avatar"></div>
-      <div class="message-bubble" v-if="message.isText">
-        <div v-html="message.content"></div>
-      </div>
-      <div class="message-bubble" v-else-if="!message.isCard">
-        <div class="message-content">{{ message.content }}</div>
-      </div>
-      <div class="card-message" v-else>
-        <div class="card-header">{{ message.title }}</div>
-        <a :href="message.linkUrl" target="_blank" class="card-link">
-          <div class="card-content">
-            <div class="card-text">{{ message.text }}</div>
-            <div class="card-image" v-if="message.imageUrl">
-              <img :src="message.imageUrl" :alt="message.title">
-            </div>
+      <div v-for="message in messages" :key="message.id" class="message-container">
+        <div class="message-item">
+          <div class="avatar"></div>
+          <div class="message-bubble" v-if="message.isText">
+            <div v-html="message.content"></div>
           </div>
-        </a>
+          <div class="message-bubble" v-else-if="!message.isCard">
+            <div class="message-content">{{ message.content }}</div>
+          </div>
+          <div class="card-message" v-else>
+            <div class="card-header">{{ message.title }}</div>
+            <a :href="message.linkUrl" target="_blank" class="card-link">
+              <div class="card-content">
+                <div class="card-text">{{ message.text }}</div>
+                <div class="card-image" v-if="message.imageUrl">
+                  <img :src="message.imageUrl" :alt="message.title" />
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+
     <div class="nav-bar">
-      <div class="nav-item" @click.stop="toggleDropdown(1, 3)">
-      <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-      <span class="nav-text">比赛介绍</span>
-      <div v-show="showDropdown[1]" class="dropdown-menu" ref="dropdownRef1">
-        <div class="dropdown-item" @click="sendCardMessage('比赛介绍', 'NGU2nd 比赛赛制介绍','','./比赛介绍.html')">比赛介绍</div>
-        <div class="dropdown-item" @click="sendCardMessage('功能牌列表', 'NGU2nd 比赛用技能牌介绍', '', './功能牌列表.html')">功能牌列表</div>
-        <div class="dropdown-item" @click="sendTextMessagesFromJSON(2)">比赛时间、地点</div>
-        <div class="dropdown-item" @click="sendTextMessagesFromJSON(0)">STAFF表</div>
-        <div class="dropdown-item" @click="sendNGU1stCard">NGU 1st</div>
-      </div>
-    </div>
-      <div class="nav-separator"></div>
-      <div class="nav-item" @click="sendCardMessage('舞萌DX / 中二节奏 登入二维码', '把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】', 'https://qr-start.srt.pub/not_project_raputa.png', 'https://mpam-lab.xyz/qr-code')">
-        <span class="nav-text">玩家二维码</span>
-      </div>
-      <div class="nav-separator"></div>
-      <div class="nav-item" @click.stop="toggleDropdown(3, 1)">
-        <font-awesome-icon :icon="['fas', 'bars']" class="nav-icon" />
-        <span class="nav-text">更多</span>
-        <div v-show="showDropdown[3]" class="dropdown-menu" ref="dropdownRef3">
-          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 舞萌比赛直播回放', '哔哩哔哩 - 舞萌DX娱乐赛 NGU2nd 比赛直播回放 - UP主：灯射来红音游协会', '', 'https://live.bilibili.com/10910411')">比赛回放</div>
-          <div class="dropdown-item" @click="sendCardMessage('NGU 2nd 全体成员合照', '点击查看合照', '','https://ngu-img.mpam-lab.xyz/NGU2nd_group_photo_v1.1.webp')">全体成员合照</div>
-          <div class="dropdown-item" @click="sendCardMessage('决赛boss曲谱面下载','< II >\n 1.5MB', require('@/assets/download.png'), 'https://ngu-img.mpam-lab.xyz/ngu2nd-boss.zip')">决赛boss曲谱面下载</div>
-          <div class="dropdown-item" @click="sendCardMessage('决赛结果', 'NGU 2nd 优胜组：越级勉强打白潘 \n 成员：Stella，Sa&K', '','https://ngu-img.mpam-lab.xyz/ngu2nd-lastround-detail.webp')">决赛结果详情</div>
-          <div class="dropdown-item" @click="sendSupportCard">打赏</div>
-          <div class="dropdown-item" @click="sendTextMessagesFromJSON(1)">关于本网站/隐私权政策</div>
+      <div
+        class="nav-item"
+        @click.stop="toggleDropdown(1, 3)"
+        v-for="navButton in configData.navbar.buttons"
+        :key="navButton['navbar-id']"
+      >
+        <font-awesome-icon v-if="navButton.dropdowns" :icon="['fas', 'bars']" class="nav-icon" />
+        <span class="nav-text">{{ navButton["navbar-name"] }}</span>
+        <div
+          v-show="showDropdown[navButton['navbar-id']]"
+          class="dropdown-menu"
+          :ref="`dropdownRef${navButton['navbar-id']}`"
+        >
+          <div
+            class="dropdown-item"
+            v-for="dropdown in navButton.dropdowns"
+            :key="dropdown['dropdown-id']"
+            @click="handleEvent(dropdown.events)"
+          >
+            {{ dropdown["dropdown-name"] }}
+          </div>
         </div>
       </div>
     </div>
@@ -66,38 +62,27 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import textMessagesData from './assets/text.json'
-//import Post from './post.vue'
-//const cardMessages = ref(cardMessageData);
+import configData from './assets/config.json'
+
 library.add(faBars)
+
 export default {
   components: {
     FontAwesomeIcon,
-    //Post
-  },
-  methods: {
-    sendNGU1stCard() {
-      this.sendCardMessage('NGU 1st （比赛日期 2023/5/14）', 'Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看NGU1st海报', '', './ngu1st-poster.webp');
-      this.sendCardMessage('比赛合照', 'NGU 1st 优胜者：Stella， 点击查看参与者合照', '', './ngu1st.webp');
-      this.sendCardMessage('直播回放', '哔哩哔哩 - 第一届NGU——"Never Give Up杯"游戏大魔方maimai娱乐赛 - UP主：Rimrose', '', 'https://www.bilibili.com/video/BV1NV4y1k7Ek/');
-    },
-    sendSupportCard(){
-      this.sendCardMessage('NGU 组织不易', '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）', 'https://ngu-img.mpam-lab.xyz/paycode.webp', 'https://ngu-img.mpam-lab.xyz/pay-qrcode.png');
-      this.sendTextMessage('①②\n③④')
-    }
   },
   setup() {
-
     const messages = ref([])
-    const textMessages = ref([])
+    const showDropdown = ref({})
+
     const sendPreviewMessage = (url) => {
       messages.value.push({
         id: Date.now(),
         content: `网址预览: ${url}`,
-        isCard: false
+        isCard: false,
       })
       scrollToBottom()
     }
+
     const sendCardMessage = (title, text, imageUrl, linkUrl) => {
       messages.value.push({
         id: Date.now(),
@@ -105,53 +90,78 @@ export default {
         text,
         imageUrl,
         linkUrl,
-        isCard: true
+        isCard: true,
       })
       scrollToBottom()
     }
-    const showDropdown = ref({
-      1: false,
-      3: false
-    })
-    const dropdownRef1 = ref(null)
-    const dropdownRef3 = ref(null)
+
+    const sendTextMessage = (text) => {
+      messages.value.push({
+        id: Date.now(),
+        content: text,
+        isCard: false,
+        isText: true,
+      })
+      scrollToBottom()
+    }
+
     const toggleDropdown = (index, otherIndex) => {
       showDropdown.value[index] = !showDropdown.value[index]
       if (showDropdown.value[index]) {
         showDropdown.value[otherIndex] = false
       }
     }
+
     const closeDropdown = (index) => {
       showDropdown.value[index] = false
     }
 
     const handleOutsideClick = (event) => {
-      if (
-        (dropdownRef1.value && !dropdownRef1.value.contains(event.target)) &&
-        (dropdownRef3.value && !dropdownRef3.value.contains(event.target))
-      ) {
-        showDropdown.value[1] = false
-        showDropdown.value[3] = false
+      const dropdownRefs = Object.values(showDropdown.value).map((_, index) => `dropdownRef${index + 1}`)
+      const dropdownElements = dropdownRefs.map((ref) => refs[ref].value)
+
+      if (dropdownElements.every((dropdown) => dropdown && !dropdown.contains(event.target))) {
+        Object.keys(showDropdown.value).forEach((index) => {
+          showDropdown.value[index] = false
+        })
       }
     }
-    const sendTextMessage = (text) => {
-      messages.value.push({
-        id: Date.now(),
-        content: text,
-        isCard: false,
-        isText: true
+
+    const handleEvent = (events) => {
+      events.forEach((event) => {
+        switch (event['type']) {
+          case 'sendCardMessage':
+            sendCardMessage(
+              event['card-title'],
+              event['card-content'],
+              event['card-image'],
+              event['card-link']
+            )
+            break
+          case 'sendTextMessage':
+            sendTextMessage(event['message'])
+            break
+          case 'sendImg':
+            sendCardMessage('', '', event['img-link'], event['img-link'])
+            break
+          case 'sendSupportCard':
+            sendCardMessage(
+              'NGU 组织不易',
+              '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）',
+              'https://ngu-img.mpam-lab.xyz/paycode.webp',
+              'https://ngu-img.mpam-lab.xyz/pay-qrcode.png'
+            )
+            sendTextMessage('①②\n③④')
+            break
+          // Add more cases as needed
+          default:
+            break
+        }
       })
-      scrollToBottom()
-    }
-    const loadTextMessages = () => {
-      textMessages.value = textMessagesData
     }
 
-
-    const sendTextMessagesFromJSON = (index) => {
-      sendTextMessage(textMessages.value[index])
-    }
     const messageAreaRef = ref(null)
+    const refs = {}
 
     const scrollToBottom = () => {
       const messageArea = messageAreaRef.value
@@ -162,11 +172,26 @@ export default {
         }
       }
     }
-    loadTextMessages()
+
+    // Initialize the showDropdown object
+    configData.navbar.buttons.forEach((button) => {
+      showDropdown.value[button['navbar-id']] = false
+    })
+
     sendCardMessage('你好，欢迎来到 NGU 2nd 比赛官网', '本网站下方有本次比赛的相关信息，请进行查看及参考', '', '')
-    sendCardMessage('如需更多比赛相关帮助', '请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz', '', 'https://space.bilibili.com/3546613924497542/')
-    sendCardMessage('本网站仅作为内部活动宣传所用', '本网站为静态网站，所有内容均为合法范围，且无不良引导。本网站无评论等交互功能', '', '')
-    // 在组件挂载时,添加点击事件监听器
+    sendCardMessage(
+      '如需更多比赛相关帮助',
+      '请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz',
+      '',
+      'https://space.bilibili.com/3546613924497542/'
+    )
+    sendCardMessage(
+      '本网站仅作为内部活动宣传所用',
+      '本网站为静态网站，所有内容均为合法范围，且无不良引导。本网站无评论等交互功能',
+      '',
+      ''
+    )
+
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
       if (window.location.hash === '#ngu3rd') {
@@ -174,11 +199,10 @@ export default {
       }
     })
 
-    // 在组件卸载时,移除点击事件监听器
     onUnmounted(() => {
       document.removeEventListener('click', handleOutsideClick)
-
     })
+
     return {
       messages,
       showDropdown,
@@ -187,15 +211,13 @@ export default {
       sendPreviewMessage,
       sendCardMessage,
       closeDropdown,
-      dropdownRef1,
-      dropdownRef3,
+      handleEvent,
+      refs,
       textMessages,
       sendTextMessage,
-      sendTextMessagesFromJSON,
-      //cardMessages,
-    }
-  }
-}
+      configData}
+      }
+      }
 </script>
 
 <style scoped>
