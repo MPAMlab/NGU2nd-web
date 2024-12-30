@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <div v-if="loading">加载中...如果卡在此页面请联系管理员或邮件至i@mpam-lab.xyz</div>
   <div v-else class="chat-app" @click.self="handleDropdownClose">
     <div class="header" :style="config.headerStyle">
       <div class="site-name">{{ config.siteName }}</div>
