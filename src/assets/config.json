@@ -20,8 +20,8 @@
               "events": [
                 {
                   "type": "sendCardMessage",
-                  "title": "NGU2nd 比赛赛制介绍",
-                  "content": "",
+                  "title": "比赛介绍",
+                  "content": "NGU2nd 比赛赛制介绍",
                   "imageUrl": "",
                   "linkUrl": "./比赛介绍.html"
                 }
@@ -33,8 +33,8 @@
               "events": [
                  {
                   "type": "sendCardMessage",
-                  "title": "NGU2nd 比赛用技能牌介绍",
-                  "content": "",
+                  "title": "功能牌列表",
+                  "content": "NGU2nd 比赛用技能牌介绍",
                   "imageUrl": "",
                   "linkUrl": "./功能牌列表.html"
                 }
