@@ -1,5 +1,6 @@
 <template>
-  <div class="chat-app" @click.self="handleDropdownClose">
+  <div v-if="loading">Loading...</div>
+  <div v-else class="chat-app" @click.self="handleDropdownClose">
     <div class="header" :style="config.headerStyle">
       <div class="site-name">{{ config.siteName }}</div>
     </div>
@@ -69,7 +70,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import configData from './assets/config.json'
 
 library.add(faBars)
 
@@ -78,14 +78,20 @@ export default {
     FontAwesomeIcon,
   },
   setup() {
-      const { config, navbar, initialMessages } = configData;
+      const config = ref({})
+      const navbar = ref({buttons: []})
+      const initialMessages = ref([])
       const messages = ref([])
       const activeDropdowns = ref(new Set())
       const dropdownRefs = ref(new Map())
       const messageAreaRef = ref(null)
       const refs = {}
+      const loading = ref(true)
+      // Replace with your R2 bucket URL
+      const r2ConfigUrl = 'https://img-bucket.srt.pub/config.json';
 
-    const sendCardMessage = (title, text, imageUrl, linkUrl) => {
+
+      const sendCardMessage = (title, text, imageUrl, linkUrl) => {
       messages.value.push({
         id: Date.now(),
         title,
@@ -113,7 +119,6 @@ export default {
             type: 'img'
         })
     }
-
 
         const eventHandlers = {
         sendCardMessage: (event) => {
@@ -160,19 +165,19 @@ export default {
     };
 
     const handleDropdownClose = (event) => {
-    if (!dropdownRefs.value || dropdownRefs.value.size === 0 ) return
-    let shouldClose = true;
-    for (const [, ref] of dropdownRefs.value) {
-       if(ref?.contains(event.target)){
-        shouldClose = false
-        break;
+      if (!dropdownRefs.value || dropdownRefs.value.size === 0 ) return
+      let shouldClose = true;
+      for (const [, ref] of dropdownRefs.value) {
+         if(ref?.contains(event.target)){
+          shouldClose = false
+          break;
+        }
       }
-    }
 
-     if(shouldClose){
+       if(shouldClose){
         activeDropdowns.value.clear()
-     }
-}
+       }
+   }
 
     const scrollToBottom = () => {
       const messageArea = messageAreaRef.value
@@ -185,31 +190,47 @@ export default {
     }
 
 
-    onMounted(() => {
-     navbar.buttons.forEach(button => {
-         const refName = `dropdownRef${button['navbar-id']}`
-         const ref =  refs[refName]
-        dropdownRefs.value.set(button['navbar-id'], ref)
-      })
+    onMounted(async () => {
+        try{
+            const response = await fetch(r2ConfigUrl)
+             if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+               }
+             const data = await response.json();
+             config.value = data.config
+             navbar.value = data.navbar
+            initialMessages.value = data.initialMessages
 
-     document.addEventListener('click', handleDropdownClose)
+           navbar.value.buttons.forEach(button => {
+            const refName = `dropdownRef${button['navbar-id']}`
+            const ref =  refs[refName]
+             dropdownRefs.value.set(button['navbar-id'], ref)
+           })
+                
+            initialMessages.value.forEach(message => {
+              if(message.type === 'sendCardMessage'){
+               sendCardMessage(message.title, message.content, message.imageUrl, message.linkUrl)
+              }
+               if(message.type === 'sendTextMessage'){
+                 sendTextMessage(message.message)
+              }
+            })
 
-    initialMessages.forEach(message => {
-      if(message.type === 'sendCardMessage'){
-       sendCardMessage(message.title, message.content, message.imageUrl, message.linkUrl)
-      }
-       if(message.type === 'sendTextMessage'){
-         sendTextMessage(message.message)
-       }
+             if (window.location.hash === '#ngu3rd') {
+              sendTextMessage('Dealt? Probably, I will still be at the place for you.')
+              }
+               loading.value = false
+
+         document.addEventListener('click', handleDropdownClose)
+        }catch(error) {
+          console.error('Failed to fetch config data', error);
+           loading.value = false
+        }
      })
-   if (window.location.hash === '#ngu3rd') {
-     sendTextMessage('Dealt? Probably, I will still be at the place for you.')
-    }
-})
- onUnmounted(() => {
-  document.removeEventListener('click', handleDropdownClose)
-})
 
+        onUnmounted(() => {
+              document.removeEventListener('click', handleDropdownClose)
+          })
 
     return {
       messages,
@@ -220,8 +241,9 @@ export default {
       refs,
       handleDropdownClose,
       toggleDropdown,
-      handleEvent
-  }
+      handleEvent,
+      loading
+    }
   },
 }
 </script>
