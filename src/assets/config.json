@@ -1,0 +1,206 @@
+{
+    "config": {
+      "siteName": "Never Give Up 2nd",
+      "headerStyle": {
+        "backgroundColor": "#baaffe"
+      },
+      "navBarStyle": {
+        "backgroundColor": "#f0f0f0"
+      }
+    },
+    "navbar": {
+      "buttons": [
+        {
+          "navbar-name": "比赛介绍",
+          "navbar-id": "1",
+          "dropdowns": [
+            {
+              "dropdown-id": "1",
+              "dropdown-name": "比赛介绍",
+              "events": [
+                {
+                  "type": "sendCardMessage",
+                  "title": "比赛介绍",
+                  "content": "NGU2nd 比赛赛制介绍",
+                  "imageUrl": "",
+                  "linkUrl": "./比赛介绍.html"
+                }
+              ]
+            },
+            {
+              "dropdown-id": "2",
+              "dropdown-name": "功能牌列表",
+              "events": [
+                 {
+                  "type": "sendCardMessage",
+                  "title": "功能牌列表",
+                  "content": "NGU2nd 比赛用技能牌介绍",
+                  "imageUrl": "",
+                  "linkUrl": "./功能牌列表.html"
+                }
+              ]
+            },
+              {
+              "dropdown-id": "3",
+              "dropdown-name": "比赛时间、地点",
+              "events": [
+                {
+                  "type": "sendTextMessage",
+                  "message": "比赛时间：2024年4月21日 13：00-21：30\n\n地点：河南省郑州市 中原区 长椿南路 TopRink游乐体验中心 \n（奥体中心东门对面、奥体中心地铁站F口出站向北步行约160m）"
+                }
+              ]
+            },
+               {
+              "dropdown-id": "4",
+              "dropdown-name": "Staff表",
+              "events": [
+                {
+                   "type": "sendTextMessage",
+                                  "message": "主办方：@灯射来红音游协会\n场地提供：TopRink 游乐体验中心\n\n主策划人： @DJDoDo\n比赛监制、主视觉及物料设计制作： @煤球大大煤球\n影像，VFX 制作：@股肉Gur0\n主持人：@数分两月半练习生\n场务：@Zhuo_Ling\n\n直播导播：@nonefffds @Rimrose\n直播间场景设计、直播流程制作：@nonefffds\n直播音效：@2wave\n\n原创音乐：@2wave\n谱面制作：R vs D\n曲绘：@煤球大大煤球\nPV：@股肉Gur0\n\n官网制作及维护：@nonefffds（MPAM Laboratory）\n官网设计：@nonefffds @煤球大大煤球\n\n解谜方案制作：@nonefffds @煤球大大煤球 @DJDoDo\n解谜程序制作：@nonefffds（MPAM Laboratory）\n解谜主视觉设计： @煤球大大煤球\n文本撰写、现场调度：@Zhuo_Ling\n特别感谢：@om1t\n\n手台制作：@股肉Gur0 @Zhuo_Ling\n\n(c)NGU Team (c)2wave (c)MPAM Laboratory\n(p)2wave"
+                }
+              ]
+            },
+             {
+              "dropdown-id": "5",
+              "dropdown-name": "比赛时间、地点",
+              "events": [
+              {
+                  "type": "sendCardMessage",
+                  "title": "NGU 1st （比赛日期 2023/5/14）",
+                  "content": "Produced by @DJDoDo @煤球大大煤球，Supported by 游戏大魔方（新悦荟店)，点击查看NGU1st海报",
+                  "imageUrl": "./ngu1st-poster.webp",
+                  "linkUrl": "./ngu1st-poster.webp"
+              },
+              {
+                  "type": "sendTextMessage",
+                  "message": "NGU 1st 优胜者：Stella，以下是比赛合照："
+              },
+              {
+                  "type": "sendImg",
+                  "imgUrl": "./ngu1st.webp"
+              },
+               {
+                   "type": "sendCardMessage",
+                  "title": "直播回放",
+                  "content": "哔哩哔哩 - 第一届NGU——\"Never Give Up杯\"游戏大魔方maimai娱乐赛 - UP主：Rimrose",
+                  "imageUrl": "",
+                  "linkUrl": "https://www.bilibili.com/video/BV1NV4y1k7Ek/"
+               }
+          ]
+            }
+          ]
+        },
+         {
+                  "navbar-name": "玩家二维码",
+                  "navbar-id": "2",
+                  "events": [
+                      {
+                          "type": "sendCardMessage",
+                          "title": "舞萌DX / 中二节奏 登入二维码",
+                          "content": "把下方二维码对准机台扫描处，可用机台有【舞萌DX ？？？】",
+                          "imageUrl": "https://qr-start.srt.pub/not_project_raputa.png",
+                          "linkUrl": "https://mpam-lab.xyz/qr-code"
+                      }
+                  ]
+              },
+        {
+          "navbar-name": "更多",
+          "navbar-id": "3",
+          "dropdowns": [
+            {
+              "dropdown-id": "6",
+              "dropdown-name": "比赛回放",
+               "events": [
+                {
+                   "type": "sendCardMessage",
+                   "title": "NGU 2nd 舞萌比赛直播回放",
+                   "content": "哔哩哔哩 - 舞萌DX娱乐赛 NGU2nd 比赛直播回放 - UP主：灯射来红音游协会",
+                   "linkUrl": "https://live.bilibili.com/10910411"
+                  }
+               ]
+            },
+            {
+              "dropdown-id": "7",
+              "dropdown-name": "全体成员合照",
+              "events": [
+                {
+                  "type": "sendCardMessage",
+                   "title": "NGU 2nd 全体成员合照",
+                  "content": "点击查看合照",
+                   "linkUrl": "https://ngu-img.mpam-lab.xyz/NGU2nd_group_photo_v1.1.webp"
+                }
+              ]
+            },
+            {
+              "dropdown-id": "8",
+              "dropdown-name": "决赛boss曲谱面下载",
+              "events": [
+                  {
+                      "type": "sendCardMessage",
+                      "title": "决赛boss曲谱面下载",
+                      "content": "< II >\n 1.5MB",
+                      "imageUrl": "https://ngu-img.mpam-lab.xyz/download.png",
+                       "linkUrl": "https://ngu-img.mpam-lab.xyz/ngu2nd-boss.zip"
+                  }
+              ]
+            },
+             {
+              "dropdown-id": "9",
+              "dropdown-name": "决赛结果详情",
+               "events": [
+                {
+                   "type": "sendCardMessage",
+                  "title": "决赛结果",
+                  "content": "NGU 2nd 优胜组：越级勉强打白潘 \n 成员：Stella，Sa&K",
+                  "linkUrl": "https://ngu-img.mpam-lab.xyz/ngu2nd-lastround-detail.webp"
+                }
+               ]
+            },
+            {
+              "dropdown-id": "10",
+              "dropdown-name": "打赏",
+              "events": [
+                 {
+                   "type": "sendSupportCard"
+                 }
+              ]
+            },
+             {
+              "dropdown-id": "11",
+              "dropdown-name": "关于本网站/隐私权政策",
+                "events": [
+                  {
+                      "type": "sendTextMessage",
+                       "message": "本网站内所有内容均由相关人员持有版权，请勿无断转载。\n\n本网站不会收集你的个人信息，也不会使用 cookies 进行访问体验上的提升。\n\n联系邮箱：i@MPAM-lab.xyz\n\n本网站由 MPAM Laboratory 提供技术支持\n\n(c)NGU Team (c)MPAM Laboratory"
+                  }
+              ]
+          }
+        ]
+      }
+      ]
+    },
+    "initialMessages": [
+        {
+        "type": "sendCardMessage",
+        "title": "你好，欢迎来到 NGU 2nd 比赛官网",
+        "content": "本网站下方有本次比赛的相关信息，请进行查看及参考",
+        "imageUrl": "",
+        "linkUrl": ""
+      },
+      {
+        "type": "sendCardMessage",
+        "title": "如需更多比赛相关帮助",
+        "content": "请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz",
+        "imageUrl": "",
+        "linkUrl": "https://space.bilibili.com/3546613924497542/"
+      },
+      {
+         "type": "sendCardMessage",
+        "title": "本网站仅作为内部活动宣传所用",
+        "content": "本网站为静态网站，所有内容均为合法范围，且无不良引导。本网站无评论等交互功能",
+        "imageUrl": "",
+        "linkUrl": ""
+      }
+    ]
+  }
+  
