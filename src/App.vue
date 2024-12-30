@@ -1,47 +1,54 @@
 <template>
-  <div class="chat-app" @click.self="closeDropdown">
-    <div class="header">
-      <div class="site-name">Never Give Up 2nd</div>
+  <div class="chat-app" @click.self="handleDropdownClose">
+    <div class="header" :style="config.headerStyle">
+      <div class="site-name">{{ config.siteName }}</div>
     </div>
 
     <div class="message-area" ref="messageAreaRef">
       <div v-for="message in messages" :key="message.id" class="message-container">
         <div class="message-item">
           <div class="avatar"></div>
-          <div class="message-bubble" v-if="message.isText">
+           <div class="message-bubble" v-if="message.type === 'text'">
             <div v-html="message.content"></div>
-          </div>
-          <div class="message-bubble" v-else-if="!message.isCard">
-            <div class="message-content">{{ message.content }}</div>
-          </div>
-          <div class="card-message" v-else>
-            <div class="card-header">{{ message.title }}</div>
-            <a :href="message.linkUrl" target="_blank" class="card-link">
-              <div class="card-content">
-                <div class="card-text">{{ message.text }}</div>
-                <div class="card-image" v-if="message.imageUrl">
-                  <img :src="message.imageUrl" :alt="message.title" />
+           </div>
+           <div class="message-bubble" v-else-if="message.type === 'preview'">
+                <div class="message-content">网址预览: <a :href="message.linkUrl" target="_blank" style="color: blue; text-decoration: underline;">{{message.linkUrl}}</a></div>
+            </div>
+            <div class="card-message" v-else-if="message.type === 'card'">
+              <div class="card-header">{{ message.title }}</div>
+              <a :href="message.linkUrl" target="_blank" class="card-link">
+                <div class="card-content">
+                  <div class="card-text">{{ message.text }}</div>
+                  <div class="card-image" v-if="message.imageUrl">
+                    <img :src="message.imageUrl" :alt="message.title" :style="{width: '50px', height: '50px', objectFit: 'cover'}" />
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
+            <div class="card-message" v-else-if="message.type === 'img'">
+                <a :href="message.imgUrl" target="_blank" class="card-link">
+                   <div class="card-image">
+                        <img :src="message.imgUrl" alt="image" :style="{width: '200px', height: '200px', objectFit: 'cover'}"/>
+                    </div>
+               </a>
+            </div>
         </div>
       </div>
     </div>
 
-    <div class="nav-bar">
+    <div class="nav-bar" :style="config.navBarStyle">
       <div
         class="nav-item"
-        @click.stop="toggleDropdown(1, 3)"
-        v-for="navButton in configData.navbar.buttons"
+        @click.stop="toggleDropdown(navButton['navbar-id'])"
+        v-for="navButton in navbar.buttons"
         :key="navButton['navbar-id']"
       >
         <font-awesome-icon v-if="navButton.dropdowns" :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">{{ navButton["navbar-name"] }}</span>
-        <div
-          v-show="showDropdown[navButton['navbar-id']]"
+          <div
+          v-show="activeDropdowns.has(navButton['navbar-id'])"
           class="dropdown-menu"
-          :ref="`dropdownRef${navButton['navbar-id']}`"
+          :ref="el => refs[`dropdownRef${navButton['navbar-id']}`] = el"
         >
           <div
             class="dropdown-item"
@@ -71,17 +78,12 @@ export default {
     FontAwesomeIcon,
   },
   setup() {
-    const messages = ref([])
-    const showDropdown = ref({})
-
-    const sendPreviewMessage = (url) => {
-      messages.value.push({
-        id: Date.now(),
-        content: `网址预览: ${url}`,
-        isCard: false,
-      })
-      scrollToBottom()
-    }
+      const { config, navbar, initialMessages } = configData;
+      const messages = ref([])
+      const activeDropdowns = ref(new Set())
+      const dropdownRefs = ref(new Map())
+      const messageAreaRef = ref(null)
+      const refs = {}
 
     const sendCardMessage = (title, text, imageUrl, linkUrl) => {
       messages.value.push({
@@ -90,7 +92,7 @@ export default {
         text,
         imageUrl,
         linkUrl,
-        isCard: true,
+        type: 'card',
       })
       scrollToBottom()
     }
@@ -99,69 +101,78 @@ export default {
       messages.value.push({
         id: Date.now(),
         content: text,
-        isCard: false,
-        isText: true,
+        type: 'text',
       })
       scrollToBottom()
     }
 
-    const toggleDropdown = (index, otherIndex) => {
-      showDropdown.value[index] = !showDropdown.value[index]
-      if (showDropdown.value[index]) {
-        showDropdown.value[otherIndex] = false
-      }
-    }
-
-    const closeDropdown = (index) => {
-      showDropdown.value[index] = false
-    }
-
-    const handleOutsideClick = (event) => {
-      const dropdownRefs = Object.values(showDropdown.value).map((_, index) => `dropdownRef${index + 1}`)
-      const dropdownElements = dropdownRefs.map((ref) => refs[ref].value)
-
-      if (dropdownElements.every((dropdown) => dropdown && !dropdown.contains(event.target))) {
-        Object.keys(showDropdown.value).forEach((index) => {
-          showDropdown.value[index] = false
+    const sendImgMessage = (imgUrl) => {
+        messages.value.push({
+            id: Date.now(),
+            imgUrl,
+            type: 'img'
         })
-      }
     }
+
+
+        const eventHandlers = {
+        sendCardMessage: (event) => {
+        sendCardMessage(
+            event.title,
+            event.content,
+            event.imageUrl,
+            event.linkUrl
+        );
+        },
+        sendTextMessage: (event) => {
+            sendTextMessage(event.message);
+        },
+        sendImg: (event) => {
+            sendImgMessage(event.imgUrl);
+        },
+        sendSupportCard: () => {
+            sendCardMessage(
+            'NGU 组织不易',
+            '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）',
+            'https://ngu-img.mpam-lab.xyz/paycode.webp',
+            'https://ngu-img.mpam-lab.xyz/pay-qrcode.png'
+            );
+            sendTextMessage('①②\n③④');
+        },
+        };
 
     const handleEvent = (events) => {
-      events.forEach((event) => {
-        switch (event['type']) {
-          case 'sendCardMessage':
-            sendCardMessage(
-              event['card-title'],
-              event['card-content'],
-              event['card-image'],
-              event['card-link']
-            )
-            break
-          case 'sendTextMessage':
-            sendTextMessage(event['message'])
-            break
-          case 'sendImg':
-            sendCardMessage('', '', event['img-link'], event['img-link'])
-            break
-          case 'sendSupportCard':
-            sendCardMessage(
-              'NGU 组织不易',
-              '如果可以的话请帮帮忙，非常感谢。（赞助后可在Staff表里写你的credit）',
-              'https://ngu-img.mpam-lab.xyz/paycode.webp',
-              'https://ngu-img.mpam-lab.xyz/pay-qrcode.png'
-            )
-            sendTextMessage('①②\n③④')
-            break
-          // Add more cases as needed
-          default:
-            break
-        }
-      })
-    }
+        events.forEach((event) => {
+          const handler = eventHandlers[event.type];
+            if (handler) {
+                handler(event);
+            }
+         });
+    };
 
-    const messageAreaRef = ref(null)
-    const refs = {}
+    const toggleDropdown = (index) => {
+      if (activeDropdowns.value.has(index)) {
+        activeDropdowns.value.delete(index);
+      } else {
+        activeDropdowns.value.clear(); // 关闭其他下拉菜单
+        activeDropdowns.value.add(index)
+      }
+    };
+
+    const handleDropdownClose = (event) => {
+        if (!dropdownRefs.value || dropdownRefs.value.size === 0 ) return
+        let shouldClose = true;
+        for (const [key, ref] of dropdownRefs.value) {
+          if (ref?.contains(event.target)) {
+              shouldClose = false;
+              break;
+            }
+        }
+
+        if(shouldClose){
+            activeDropdowns.value.clear()
+        }
+    }
 
     const scrollToBottom = () => {
       const messageArea = messageAreaRef.value
@@ -173,51 +184,42 @@ export default {
       }
     }
 
-    // Initialize the showDropdown object
-    configData.navbar.buttons.forEach((button) => {
-      showDropdown.value[button['navbar-id']] = false
-    })
-
-    sendCardMessage('你好，欢迎来到 NGU 2nd 比赛官网', '本网站下方有本次比赛的相关信息，请进行查看及参考', '', '')
-    sendCardMessage(
-      '如需更多比赛相关帮助',
-      '请联系b站官方账号 @灯射来红音游协会。如有网站相关问题，请联系邮箱 i@MPAM-Lab.xyz',
-      '',
-      'https://space.bilibili.com/3546613924497542/'
-    )
-    sendCardMessage(
-      '本网站仅作为内部活动宣传所用',
-      '本网站为静态网站，所有内容均为合法范围，且无不良引导。本网站无评论等交互功能',
-      '',
-      ''
-    )
 
     onMounted(() => {
-      document.addEventListener('click', handleOutsideClick)
+        navbar.buttons.forEach(button => {
+            const refName = `dropdownRef${button['navbar-id']}`
+            const ref =  refs[refName]
+           dropdownRefs.value.set(button['navbar-id'], ref)
+        })
+
+        document.addEventListener('click', handleDropdownClose)
+          initialMessages.forEach(message => {
+           if(message.type === 'sendCardMessage'){
+            sendCardMessage(message.title, message.content, message.imageUrl, message.linkUrl)
+           }
+            if(message.type === 'sendTextMessage'){
+              sendTextMessage(message.message)
+            }
+          })
       if (window.location.hash === '#ngu3rd') {
         sendTextMessage('Dealt? Probably, I will still be at the place for you.')
       }
     })
 
-    onUnmounted(() => {
-      document.removeEventListener('click', handleOutsideClick)
-    })
 
     return {
       messages,
-      showDropdown,
+      activeDropdowns,
       messageAreaRef,
-      toggleDropdown,
-      sendPreviewMessage,
-      sendCardMessage,
-      closeDropdown,
-      handleEvent,
+      config,
+      navbar,
       refs,
-      textMessages,
-      sendTextMessage,
-      configData}
-      }
-      }
+      handleDropdownClose,
+      toggleDropdown,
+      handleEvent
+  }
+  },
+}
 </script>
 
 <style scoped>
@@ -233,7 +235,7 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   font-family: 'Noto Sans SC', sans-serif;
 }
 .site-name {
@@ -244,10 +246,9 @@ export default {
 }
 .header {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   height: 60px;
-  background-color: #baaffe;
   padding: 0 20px;
   position: fixed;
   top: 0;
@@ -275,9 +276,9 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background-image: url('./assets/logo-500x500.png'); 
-  background-size: cover; 
-  background-position: center; 
+  background-image: url('./assets/logo-500x500.png');
+  background-size: cover;
+  background-position: center;
   margin-right: 10px;
 }
 
@@ -290,8 +291,8 @@ export default {
 }
 
 .message-content {
-  word-break: break-word; 
-  white-space: pre-wrap; 
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .card-message {
@@ -335,7 +336,6 @@ export default {
   justify-content: space-around;
   align-items: center;
   height: 60px;
-  background-color: #f0f0f0;
   position: fixed;
   bottom: 0;
   left: 0;
