@@ -160,19 +160,19 @@ export default {
     };
 
     const handleDropdownClose = (event) => {
-        if (!dropdownRefs.value || dropdownRefs.value.size === 0 ) return
-        let shouldClose = true;
-        for (const [key, ref] of dropdownRefs.value) {
-          if (ref?.contains(event.target)) {
-              shouldClose = false;
-              break;
-            }
-        }
-
-        if(shouldClose){
-            activeDropdowns.value.clear()
-        }
+    if (!dropdownRefs.value || dropdownRefs.value.size === 0 ) return
+    let shouldClose = true;
+    for (const [, ref] of dropdownRefs.value) {
+       if(ref?.contains(event.target)){
+        shouldClose = false
+        break;
+      }
     }
+
+     if(shouldClose){
+        activeDropdowns.value.clear()
+     }
+}
 
     const scrollToBottom = () => {
       const messageArea = messageAreaRef.value
@@ -186,25 +186,29 @@ export default {
 
 
     onMounted(() => {
-        navbar.buttons.forEach(button => {
-            const refName = `dropdownRef${button['navbar-id']}`
-            const ref =  refs[refName]
-           dropdownRefs.value.set(button['navbar-id'], ref)
-        })
+     navbar.buttons.forEach(button => {
+         const refName = `dropdownRef${button['navbar-id']}`
+         const ref =  refs[refName]
+        dropdownRefs.value.set(button['navbar-id'], ref)
+      })
 
-        document.addEventListener('click', handleDropdownClose)
-          initialMessages.forEach(message => {
-           if(message.type === 'sendCardMessage'){
-            sendCardMessage(message.title, message.content, message.imageUrl, message.linkUrl)
-           }
-            if(message.type === 'sendTextMessage'){
-              sendTextMessage(message.message)
-            }
-          })
-      if (window.location.hash === '#ngu3rd') {
-        sendTextMessage('Dealt? Probably, I will still be at the place for you.')
+     document.addEventListener('click', handleDropdownClose)
+
+    initialMessages.forEach(message => {
+      if(message.type === 'sendCardMessage'){
+       sendCardMessage(message.title, message.content, message.imageUrl, message.linkUrl)
       }
-    })
+       if(message.type === 'sendTextMessage'){
+         sendTextMessage(message.message)
+       }
+     })
+   if (window.location.hash === '#ngu3rd') {
+     sendTextMessage('Dealt? Probably, I will still be at the place for you.')
+    }
+})
+ onUnmounted(() => {
+  document.removeEventListener('click', handleDropdownClose)
+})
 
 
     return {
