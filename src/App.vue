@@ -218,8 +218,8 @@ export default {
 
              if (window.location.hash === '#ngu3rd') {
               sendTextMessage('Dealt? Probably, I will still be at the place for you.')
-              sendCardMessage('NGU3rd报名页面', '', '', 'https://signup.ngu3rd.mpam-lab.xyz')
-              sendCardMessage('NGU3rd', '2025年6月8日', '', 'https://ngu3rd.mpam-lab.xyz')
+              sendCardMessage('NGU3rd报名页面', '点击进入报名页面（于2025年6月7日停止报名）', 'https://signup.ngu3rd.mpam-lab.xyz/logo.webp', 'https://signup.ngu3rd.mpam-lab.xyz')
+              sendCardMessage('NGU3rd', '2025年6月8日', 'https://signup.ngu3rd.mpam-lab.xyz/logo.webp', 'https://ngu3rd.mpam-lab.xyz')
               }
                loading.value = false
 
