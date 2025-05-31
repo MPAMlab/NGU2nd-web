@@ -218,7 +218,8 @@ export default {
 
              if (window.location.hash === '#ngu3rd') {
               sendTextMessage('Dealt? Probably, I will still be at the place for you.')
-              sendCardMessage('NGU3rd', '2025年6月', '', 'https://ngu3rd.mpam-lab.xyz')
+              sendCardMessage('NGU3rd报名页面', '', '', 'https://signup.ngu3rd.mpam-lab.xyz')
+              sendCardMessage('NGU3rd', '2025年6月8日', '', 'https://ngu3rd.mpam-lab.xyz')
               }
                loading.value = false
 
