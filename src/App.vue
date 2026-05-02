@@ -40,11 +40,11 @@
     <div class="nav-bar" :style="config.navBarStyle">
       <div
         class="nav-item"
-        @click.stop="toggleDropdown(navButton['navbar-id'])"
+        @click.stop="handleNavClick(navButton)"
         v-for="navButton in navbar.buttons"
         :key="navButton['navbar-id']"
       >
-        <font-awesome-icon v-if="navButton.dropdowns" :icon="['fas', 'bars']" class="nav-icon" />
+        <font-awesome-icon v-if="navButton.dropdowns && navButton.dropdowns.length > 0" :icon="['fas', 'bars']" class="nav-icon" />
         <span class="nav-text">{{ navButton["navbar-name"] }}</span>
           <div
           v-show="activeDropdowns.has(navButton['navbar-id'])"
@@ -144,6 +144,9 @@ export default {
             );
             sendTextMessage('①②\n③④');
         },
+        redirect: (event) => {
+            window.location.href = event.url;
+        },
         };
 
     const handleEvent = (events) => {
@@ -153,6 +156,14 @@ export default {
                 handler(event);
             }
          });
+    };
+
+    const handleNavClick = (navButton) => {
+      if (navButton.dropdowns && navButton.dropdowns.length > 0) {
+        toggleDropdown(navButton['navbar-id']);
+      } else if (navButton.events) {
+        handleEvent(navButton.events);
+      }
     };
 
     const toggleDropdown = (index) => {
@@ -243,6 +254,7 @@ export default {
       refs,
       handleDropdownClose,
       toggleDropdown,
+      handleNavClick,
       handleEvent,
       loading
     }
